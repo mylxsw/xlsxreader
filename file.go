@@ -5,6 +5,8 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+
+	"github.com/mylxsw/asteria/log"
 )
 
 // XlsxFile defines a populated XLSX file struct.
@@ -143,13 +145,14 @@ func (x *XlsxFile) init(zipReader *zip.Reader) error {
 
 	dateStyles, err := getDateFormatStyles(zipReader.File)
 	if err != nil {
-		return fmt.Errorf("unable to get date styles: %w", err)
+		log.Warningf("unable to get date format styles: %v", err)
+	} else {
+		x.dateStyles = *dateStyles
 	}
 
 	x.sharedStrings = sharedStrings
 	x.Sheets = sheets
 	x.sheetFiles = *sheetFiles
-	x.dateStyles = *dateStyles
 
 	return nil
 }
